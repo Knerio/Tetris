@@ -27,5 +27,7 @@ bin/
 
 *.iml
 
+.idea
+
 ### Mac OS ###
 .DS_Store
