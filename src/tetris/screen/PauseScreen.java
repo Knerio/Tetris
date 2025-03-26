@@ -18,6 +18,7 @@ public class PauseScreen extends Screen {
 
 
     // Will be called on load
+    @Override
     public void onResize() {
         try {
             removeAll();

@@ -20,6 +20,7 @@ import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class PlayFrame extends JPanel {
 
@@ -45,7 +46,7 @@ public class PlayFrame extends JPanel {
     public PlayFrame() {
         instance = this;
 
-        comingBlocks.push(new Pair<>(BlockType.getRandomType(List.of()), getRandomColor()));
+        comingBlocks.push(new Pair<>(BlockType.getRandomType(new ArrayList<>()), getRandomColor()));
 
         setBackground(Color.lightGray);
         setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
@@ -109,13 +110,13 @@ public class PlayFrame extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ESCAPE -> {
+                    case KeyEvent.VK_ESCAPE:
                         if (gameState == GameState.PAUSED) {
                             updateGameState(GameState.PLAYING);
                         } else {
                             updateGameState(GameState.PAUSED);
                         }
-                    }
+                        break;
                 }
             }
 
@@ -129,15 +130,16 @@ public class PlayFrame extends JPanel {
     public void updateGameState(GameState gameState) {
         if (MainFrame.getInstance().pauseScreen.isFading()) return;
         switch (gameState) {
-            case PLAYING -> {
+            case PLAYING:
                 MainFrame.getInstance().pauseScreen.fadeOut().thenRun(() -> {
-                    this.gameState = gameState;
+                    this.gameState = gameState; // It should only continue after the screen is completely closed for ux
                 });
-            }
-            case PAUSED -> {
-                this.gameState = gameState;
+                break;
+
+            case PAUSED:
+                this.gameState = gameState; // It should be paused before the fade in for ux
                 MainFrame.getInstance().pauseScreen.fadeIn();
-            }
+                break;
         }
     }
 
@@ -232,7 +234,7 @@ public class PlayFrame extends JPanel {
         lastBlocks.add(selectedType.getFirst());
 
 
-        new ToPlaceBlock(selectedType.getFirst().getPoints().stream().map(point -> new Block(point, selectedType.getSecond(), Color.BLACK, false)).toList(), () -> {
+        new ToPlaceBlock(selectedType.getFirst().getPoints().stream().map(point -> new Block(point, selectedType.getSecond(), Color.BLACK, false)).collect(Collectors.toList()), () -> {
             deleteLineOrLose().thenRun(() -> {
                 computeNewToPlaceBlocks();
                 MainFrame.getInstance().displayNextBlockFrame.updateNext();
@@ -281,7 +283,7 @@ public class PlayFrame extends JPanel {
         MainFrame.getInstance().setScore(score + 60 * linesToRemove.size());
 
         removeLines(linesToRemove).thenRun(() -> {
-            for (Integer downYLevel : linesToRemove.stream().sorted().toList()) {
+            for (Integer downYLevel : linesToRemove.stream().sorted().collect(Collectors.toList())) {
                 for (Block placedBlock : placedBlocks) {
                     Point location = placedBlock.getLocation();
                     if (location.y > downYLevel) continue;

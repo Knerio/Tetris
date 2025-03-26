@@ -23,7 +23,7 @@ public abstract class Screen extends JPanel {
         return isFading;
     }
 
-    public Screen( Color background, int maxAlpha) {
+    public Screen(Color background, int maxAlpha) {
         this(background, maxAlpha, 15, 7);
     }
 
@@ -69,7 +69,6 @@ public abstract class Screen extends JPanel {
         }, 1, delay);
 
 
-
         return future;
     }
 
@@ -106,9 +105,9 @@ public abstract class Screen extends JPanel {
         }, 1, delay);
 
 
-
-
         return future;
     }
+
+    public abstract void onResize();
 
 }

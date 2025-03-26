@@ -4,6 +4,7 @@ import tetris.block.DisplayNextBlockFrame;
 import tetris.game.PlayFrame;
 import tetris.label.TextLabel;
 import tetris.screen.PauseScreen;
+import tetris.screen.Screen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,7 @@ public class MainFrame extends JFrame {
 
     private PlayFrame playFrame;
 
-    public PauseScreen pauseScreen;
+    public Screen pauseScreen;
 
     public DisplayNextBlockFrame displayNextBlockFrame;
 
@@ -65,9 +66,9 @@ public class MainFrame extends JFrame {
         add(nextBlockLabel);
 
 
-        JLabel scoreLabel = new TextLabel("Score: xxx");
+        final JLabel scoreLabel = new TextLabel("Score: xxx");
         scoreLabel.setLocation(20, 20);
-        JLabel recordLabel = new TextLabel("Rekord: xxx");
+        final JLabel recordLabel = new TextLabel("Rekord: xxx");
         recordLabel.setLocation(20, 50);
 
         new Timer(200, new AbstractAction() {

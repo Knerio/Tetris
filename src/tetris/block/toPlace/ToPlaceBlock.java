@@ -17,6 +17,8 @@ public class ToPlaceBlock {
 
     private final List<Block> blocks;
 
+    private boolean canBeMoved = true;
+
 
     public List<Block> getBlocks() {
         return blocks;
@@ -39,19 +41,36 @@ public class ToPlaceBlock {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (PlayFrame.getInstance().gameState != GameState.PLAYING) return;
+                if (PlayFrame.getInstance().gameState != GameState.PLAYING || !canBeMoved) return;
                 int blockSize = PlayFrame.getInstance().getRescaledBlockSize();
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP, KeyEvent.VK_SPACE, KeyEvent.VK_W -> rotate();
-                    case KeyEvent.VK_LEFT, KeyEvent.VK_A -> move(-blockSize);
-                    case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> move(blockSize);
-                    case KeyEvent.VK_DOWN, KeyEvent.VK_S -> moveDown();
+                    case KeyEvent.VK_SPACE:
+                        placeNow();
+                        break;
+
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W:
+                        rotate();
+                        break;
+                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_A:
+                        move(-blockSize);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_D:
+                        move(blockSize);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S:
+                        moveDown();
+                        break;
                 }
                 shadow.update();
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {
+            }
         };
 
         MainFrame.getInstance().addKeyListener(listener);
@@ -82,7 +101,13 @@ public class ToPlaceBlock {
         }).start();
 
 
+    }
 
+    private void placeNow() {
+        canBeMoved = false;
+        for (int i = 0; i < PlayFrame.BLOCKS_PER_HEIGHT; i++) {
+            moveDown();
+        }
     }
 
     /*
@@ -129,7 +154,8 @@ public class ToPlaceBlock {
     private void move(int i) {
         for (Block block : blocks) {
             Point location = block.getLocation();
-            if (i > 0 && location.x + i == PlayFrame.getInstance().getRescaledWidth()) return; // move to the right is out of bounds
+            if (i > 0 && location.x + i == PlayFrame.getInstance().getRescaledWidth())
+                return; // move to the right is out of bounds
             if (i < 0 && location.x == 0) return; // move to the left is out of bounds
             int newX = location.x + i;
             for (Block placedBlock : PlayFrame.getInstance().getPlacedBlocks()) {

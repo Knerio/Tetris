@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static tetris.game.PlayFrame.getInstance;
 
@@ -124,7 +125,7 @@ public enum BlockType {
     }
 
     public static BlockType getRandomType(List<BlockType> ignore) {
-        List<BlockType> blocks = new ArrayList<>(Arrays.stream(values()).filter(blockType -> !ignore.contains(blockType)).toList());
+        List<BlockType> blocks = Arrays.stream(values()).filter(blockType -> !ignore.contains(blockType)).collect(Collectors.toList());
         Collections.shuffle(blocks);
         int totalWeight = blocks.stream().mapToInt(value -> value.weight).sum();
 

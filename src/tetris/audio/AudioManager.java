@@ -27,11 +27,11 @@ public class AudioManager {
 
 
     public CompletableFuture<Void> playAudio(ClipType type, boolean loop) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
+        final CompletableFuture<Void> future = new CompletableFuture<>();
 
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("./res/audio", type.getFileName()).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
+            final Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
             if (loop) {
