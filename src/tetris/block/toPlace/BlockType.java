@@ -51,8 +51,7 @@ public enum BlockType {
             new Point(getInstance().getBaseBlockX() + 2, getInstance().getBaseBlockY()),
             new Point(getInstance().getBaseBlockX(), getInstance().getBaseBlockY()),
             new Point(getInstance().getBaseBlockX() + 1, getInstance().getBaseBlockY()),
-            new Point(getInstance().getBaseBlockX() + 3, getInstance().getBaseBlockY()),
-            new Point(getInstance().getBaseBlockX() + 4, getInstance().getBaseBlockY())
+            new Point(getInstance().getBaseBlockX() + 3, getInstance().getBaseBlockY())
     ), 5),
 
     /*

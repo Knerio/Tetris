@@ -92,10 +92,7 @@ public class ToPlaceBlock {
                     onCancel.run();
                     return;
                 }
-                for (Block block : blocks) {
-                    Point location = block.getLocation();
-                    block.setLocation(location.x, location.y + PlayFrame.getInstance().getRescaledBlockSize());
-                }
+                moveDown();
                 shadow.update();
             }
         }).start();

@@ -280,7 +280,7 @@ public class PlayFrame extends JPanel {
             return completion;
         }
         int score = MainFrame.getInstance().getScore();
-        MainFrame.getInstance().setScore(score + 60 * linesToRemove.size());
+        MainFrame.getInstance().setScore(score + calculateScore(linesToRemove.size()));
 
         removeLines(linesToRemove).thenRun(() -> {
             for (Integer downYLevel : linesToRemove.stream().sorted().collect(Collectors.toList())) {
@@ -294,6 +294,21 @@ public class PlayFrame extends JPanel {
         });
 
         return completion;
+    }
+
+    private int calculateScore(int linesCleared) {
+        switch (linesCleared) {
+            case 1:
+                return 60;
+            case 2:
+                return 150;
+            case 3:
+                return 350;
+            case 4:
+                return 1000;
+            default:
+                return 0;
+        }
     }
 
 
