@@ -34,7 +34,8 @@ public class ShadowBlock {
 
 
 
-    public void update() {
+    public synchronized void update() {
+        if (shadows.isEmpty()) return;
         int blockSize = PlayFrame.getInstance().getRescaledBlockSize();
         int negY = calculateYOffset();
 
@@ -70,7 +71,7 @@ public class ShadowBlock {
         }
     }
 
-    public void remove() {
+    public synchronized void remove() {
         for (Block placedBlock : new ArrayList<>(shadows)) {
             shadows.remove(placedBlock);
             PlayFrame.getInstance().remove(placedBlock);

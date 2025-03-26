@@ -12,12 +12,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 public class ToPlaceBlock {
 
     private final List<Block> blocks;
 
     private boolean canBeMoved = true;
+
+    private ShadowBlock shadow;
 
 
     public List<Block> getBlocks() {
@@ -27,7 +30,7 @@ public class ToPlaceBlock {
     public ToPlaceBlock(List<Block> initialBlocks, Runnable onCancel) {
         this.blocks = initialBlocks;
 
-        ShadowBlock shadow = new ShadowBlock(this);
+        shadow = new ShadowBlock(this);
 
         for (Block block : blocks) {
             PlayFrame.getInstance().add(block, 1);
@@ -103,7 +106,17 @@ public class ToPlaceBlock {
     private void placeNow() {
         canBeMoved = false;
         for (int i = 0; i < PlayFrame.BLOCKS_PER_HEIGHT; i++) {
-            moveDown();
+            new java.util.Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (PlayFrame.getInstance().gameState != GameState.PLAYING) {
+                        canBeMoved = true;
+                        return;
+                    }
+                    moveDown();
+                    shadow.update();
+                }
+            }, i * 15L);
         }
     }
 
