@@ -34,9 +34,21 @@ public abstract class Screen extends JPanel {
         this.delta = delta;
         setBackground(background);
         setLayout(null);
+        setOpaque(true);
         setVisible(false);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha / maxAlpha);
+        g2d.setComposite(alphaComposite);
+
+        super.paintComponent(g2d);
+    }
 
     public CompletableFuture<Void> fadeIn() {
         CompletableFuture<Void> future = new CompletableFuture<>();
