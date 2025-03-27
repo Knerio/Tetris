@@ -27,7 +27,7 @@ public class PauseScreen extends Screen {
 
             label.setBackground(new Color(0, 0, 0, 0));
             label.setSize(MainFrame.getInstance().getSize()); // will be centered anyways and then we can use a big font size
-            label.setFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/font", "Tetra.ttf")).deriveFont(((float) (MainFrame.getInstance().getHeight() / 7))));
+            label.setFont(Font.createFont(Font.TRUETYPE_FONT, new File("./res/font", "Tetra.ttf")).deriveFont(((float) (MainFrame.getInstance().getScaleFactor() / 7))));
             label.setBorder(null);
             label.setForeground(Color.WHITE);
             label.setLocation(MainFrame.getInstance().getWidth() / 2 - label.getWidth() / 2, MainFrame.getInstance().getHeight() / 5 - label.getHeight() / 2);

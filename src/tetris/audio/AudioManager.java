@@ -27,6 +27,10 @@ public class AudioManager {
 
 
     public CompletableFuture<Void> playAudio(ClipType type, boolean loop) {
+        if (clips.containsKey(type)) {
+            return CompletableFuture.completedFuture(null);
+        }
+
         final CompletableFuture<Void> future = new CompletableFuture<>();
 
         try {

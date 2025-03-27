@@ -3,8 +3,10 @@ package tetris;
 import tetris.block.DisplayNextBlockFrame;
 import tetris.game.PlayFrame;
 import tetris.label.TextLabel;
+import tetris.screen.LostScreen;
 import tetris.screen.PauseScreen;
 import tetris.screen.Screen;
+import tetris.screen.StartScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +31,7 @@ public class MainFrame extends JFrame {
 
     private PlayFrame playFrame;
 
-    public Screen pauseScreen;
+    public Screen pauseScreen, startScreen, lostScreen;
 
     public DisplayNextBlockFrame displayNextBlockFrame;
 
@@ -56,6 +58,12 @@ public class MainFrame extends JFrame {
         pauseScreen = new PauseScreen();
         add(pauseScreen);
 
+        startScreen = new StartScreen();
+        add(startScreen);
+
+        lostScreen = new LostScreen();
+        add(lostScreen);
+
         playFrame = new PlayFrame();
         add(playFrame);
 
@@ -78,6 +86,10 @@ public class MainFrame extends JFrame {
 
                 scoreLabel.setText("Score: " + getScore());
                 recordLabel.setText("Rekord: " + record);
+
+                if (!hasFocus()) {
+                    requestFocus(); // Is needed when buttons are pressed and the main frame gets unfocused
+                }
 
                 playFrame.onResize();
                 onResize();
@@ -112,6 +124,10 @@ public class MainFrame extends JFrame {
     }
 
     private void onResize() {
+        pauseScreen.onResize();
+        startScreen.onResize();
+        lostScreen.onResize();
+
         ImageIcon image = new ImageIcon("res/background.png");
         Image rescaled = image.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_DEFAULT);
         ImageIcon rescaledIcon = new ImageIcon(rescaled);
@@ -123,9 +139,12 @@ public class MainFrame extends JFrame {
             backgroundImage.setIcon(rescaledIcon);
         }
         displayNextBlockFrame.onResize();
-        pauseScreen.onResize();
 
         nextBlockLabel.setLocation(playFrame.getX() + playFrame.getWidth(), playFrame.getY());
+    }
+
+    public int getScaleFactor() {
+        return Math.min(getWidth(), getHeight());
     }
 
     public static MainFrame getInstance() {

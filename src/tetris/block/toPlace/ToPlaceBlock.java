@@ -80,7 +80,7 @@ public class ToPlaceBlock {
 
         new Timer(getDelayBasedOnScore(), new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public synchronized void actionPerformed(ActionEvent e) {
                 if (PlayFrame.getInstance().gameState != GameState.PLAYING) return;
                 if (isInvalidMoveDown()) {
                     MainFrame.getInstance().setScore(MainFrame.getInstance().getScore() + blocks.size());
@@ -152,7 +152,7 @@ public class ToPlaceBlock {
         return false;
     }
 
-    private void moveDown() {
+    private synchronized void moveDown() {
         int blockSize = PlayFrame.getInstance().getRescaledBlockSize();
         if (isInvalidMoveDown()) return;
         for (Block block : blocks) {

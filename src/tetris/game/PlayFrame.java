@@ -39,7 +39,7 @@ public class PlayFrame extends JPanel {
 
     private Integer scaledWidth, scaledHeight, scaledSize;
 
-    public GameState gameState = GameState.PLAYING;
+    public GameState gameState = GameState.START;
 
     private final List<Block> placedBlocks = new ArrayList<>();
 
@@ -113,7 +113,7 @@ public class PlayFrame extends JPanel {
                     case KeyEvent.VK_ESCAPE:
                         if (gameState == GameState.PAUSED) {
                             updateGameState(GameState.PLAYING);
-                        } else {
+                        } else if (gameState == GameState.PLAYING) {
                             updateGameState(GameState.PAUSED);
                         }
                         break;
@@ -317,6 +317,7 @@ public class PlayFrame extends JPanel {
         audioManager.playAudio(ClipType.GAME_OVER).thenRun(() -> {
             audioManager.playAudio(ClipType.BACKGROUND);
         });
+        MainFrame.getInstance().lostScreen.fadeIn();
     }
 
 
