@@ -33,6 +33,8 @@ public abstract class Screen extends JPanel {
         this.delay = delay;
         this.delta = delta;
         setBackground(background);
+        setLayout(null);
+        setVisible(false);
     }
 
 
@@ -56,6 +58,7 @@ public abstract class Screen extends JPanel {
                     timer.cancel();
                     isFading = false;
                     alpha = maxAlpha;
+                    setBackground(new Color(background.getRed(), background.getGreen(), background.getBlue(), alpha));
                     MainFrame.getInstance().repaint();
                     return;
                 }
@@ -92,6 +95,7 @@ public abstract class Screen extends JPanel {
                     isFading = false;
                     setVisible(false);
                     alpha = 1;
+                    setBackground(new Color(background.getRed(), background.getGreen(), background.getBlue(), alpha));
                     MainFrame.getInstance().repaint();
                     return;
                 }

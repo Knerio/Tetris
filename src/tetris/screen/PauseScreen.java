@@ -12,8 +12,6 @@ public class PauseScreen extends Screen {
 
     public PauseScreen() {
         super(new Color(128, 128, 128), 130);
-        setLayout(null);
-        setVisible(false);
     }
 
 
