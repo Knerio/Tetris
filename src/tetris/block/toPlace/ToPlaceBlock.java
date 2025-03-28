@@ -123,12 +123,12 @@ public class ToPlaceBlock {
     /*
      * Calculates the drop rate of the to place block.
      * Starts at every 700th ms.
-     * Decreases with every 4th block by one.
+     * Decreases with every 10th score by one.
      * Min delay is 200 ms.
      */
     private int getDelayBasedOnScore() {
         int baseDelay = 700;
-        int delayDecrease = MainFrame.getInstance().getScore() / 4; // Reduce delay for every 4 points
+        int delayDecrease = MainFrame.getInstance().getScore() / 10; // Reduce delay for every 10 points
 
         int newDelay = baseDelay - delayDecrease;
         return Math.max(newDelay, 200);
