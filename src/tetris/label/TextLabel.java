@@ -15,7 +15,7 @@ public class TextLabel extends JLabel {
         setForeground(Color.black);
         setBorder(new LineBorder(Color.black));
 
-        setSize(PlayFrame.getInstance().getRescaledBlockSize() * 5, 30);
+        setSize(PlayFrame.getInstance().getRescaledBlockSize() * 9, 30);
         setHorizontalAlignment(SwingConstants.CENTER);
         setFont(new Font("Arial", Font.PLAIN, 15));
         setText(text);

@@ -36,9 +36,18 @@ public class StartScreen extends Screen {
     @Override
     public void onResize() {
         try {
+            if (getWidth() == MainFrame.getInstance().getWidth()) return;
+            if (getHeight() == MainFrame.getInstance().getHeight()) return;
+            System.out.println("asd");
             removeAll();
 
             setSize(MainFrame.getInstance().getSize());
+
+
+            ImageIcon image = new ImageIcon("res/start_background.png");
+            Image rescaled = image.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_DEFAULT);
+            ImageIcon rescaledIcon = new ImageIcon(rescaled);
+            add(new JLabel(rescaledIcon));
 
             TextLabel label = new TextLabel("TETRIS");
 
@@ -51,6 +60,8 @@ public class StartScreen extends Screen {
 
             add(label);
 
+
+
             JButton startButton = new JButton("Start");
 
             startButton.setFont(new Font("Dialog", Font.PLAIN, MainFrame.getInstance().getScaleFactor() / 20));
@@ -58,11 +69,22 @@ public class StartScreen extends Screen {
             startButton.setForeground(Color.BLACK);
             startButton.setSize(startButton.getPreferredSize());
             startButton.setLocation(MainFrame.getInstance().getWidth() / 2 - startButton.getWidth() / 2, MainFrame.getInstance().getHeight() / 2 - startButton.getHeight() / 2);
-            startButton.addActionListener(e -> {
-                fadeOut();
-            });
+
 
             add(startButton);
+
+            JTextField nameInput = new JTextField("<Name>");
+            nameInput.setEditable(true);
+            nameInput.setSize(200, 20);
+            nameInput.setLocation(MainFrame.getInstance().getWidth() / 2 - nameInput.getWidth() / 2, MainFrame.getInstance().getHeight() / 2 - nameInput.getHeight() / 2 + startButton.getHeight());
+
+
+            add(nameInput, 1);
+
+            startButton.addActionListener(e -> {
+                MainFrame.getInstance().playerName = nameInput.getText().replace(" ", "_");
+                fadeOut();
+            });
 
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);

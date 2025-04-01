@@ -1,6 +1,7 @@
 package tetris;
 
 import tetris.block.DisplayNextBlockFrame;
+import tetris.game.GameState;
 import tetris.game.PlayFrame;
 import tetris.label.TextLabel;
 import tetris.screen.LostScreen;
@@ -14,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.*;
+import java.util.AbstractMap;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -26,6 +30,8 @@ public class MainFrame extends JFrame {
     private int score = 0;
 
     private int record = 0;
+    private int allTimeRecord = 0;
+    private String allTimeRecordName = "";
 
     private JLabel backgroundImage;
 
@@ -38,6 +44,8 @@ public class MainFrame extends JFrame {
     private TextLabel nextBlockLabel;
 
     private final AtomicLong lastResizeTime = new AtomicLong(0);
+
+    public String playerName;
 
 
     public MainFrame() throws HeadlessException {
@@ -78,16 +86,21 @@ public class MainFrame extends JFrame {
         scoreLabel.setLocation(20, 20);
         final JLabel recordLabel = new TextLabel("Rekord: xxx");
         recordLabel.setLocation(20, 50);
+        final JLabel allTimeRecordLabel = new TextLabel("Allzeit-Rekord: xxx von xxx");
+        allTimeRecordLabel.setLocation(20, 80);
 
         new Timer(200, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                record = readRecord();
+                record = readRecord(playerName);
+                allTimeRecord = readRecord();
+                allTimeRecordName = readRecordName();
 
                 scoreLabel.setText("Score: " + getScore());
                 recordLabel.setText("Rekord: " + record);
+                allTimeRecordLabel.setText("Allzeit-Rekord: " + allTimeRecord + " von " + allTimeRecordName);
 
-                if (!hasFocus()) {
+                if (!hasFocus() && PlayFrame.getInstance().gameState == GameState.PLAYING) {
                     requestFocus(); // Is needed when buttons are pressed and the main frame gets unfocused
                 }
 
@@ -97,6 +110,7 @@ public class MainFrame extends JFrame {
         }).start();
         add(scoreLabel);
         add(recordLabel);
+        add(allTimeRecordLabel);
 
         onResize();
 
@@ -121,6 +135,25 @@ public class MainFrame extends JFrame {
             }
         });
 
+    }
+
+    private String readRecordName() {
+        try {
+            File file = new File(".", RECORD_FILE_NAME);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            Properties properties = new Properties();
+            properties.load(new FileReader(file));
+            return properties.entrySet().stream()
+                    .map(entry -> new AbstractMap.SimpleEntry<>((String) entry.getKey(), Integer.parseInt((String) entry.getValue())))
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .map(s -> s.replace("rekord_", ""))
+                    .orElse(null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
     }
 
     private void onResize() {
@@ -159,24 +192,38 @@ public class MainFrame extends JFrame {
         this.score = score;
         if (score > record) {
             record = score;
-            writeRecord();
+            writeRecord(playerName);
         }
     }
 
     public void setLastScore(int lastScore) {
         if (lastScore > record) {
             record = lastScore;
-            writeRecord();
+            writeRecord(playerName);
         }
     }
 
 
-    private void writeRecord() {
+    private void writeRecord(String name) {
         try {
             Properties properties = new Properties();
             properties.load(new FileReader(RECORD_FILE_NAME));
-            properties.put("record", String.valueOf(record));
+            properties.put("rekord_" + name, String.valueOf(record));
             properties.store(new FileWriter(RECORD_FILE_NAME), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int readRecord(String name) {
+        try {
+            File file = new File(".", RECORD_FILE_NAME);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            Properties properties = new Properties();
+            properties.load(new FileReader(file));
+            return Integer.parseInt(properties.getProperty("rekord_" + name, "0"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -190,7 +237,7 @@ public class MainFrame extends JFrame {
             }
             Properties properties = new Properties();
             properties.load(new FileReader(file));
-            return Integer.parseInt(properties.getProperty("record", "0"));
+            return properties.entrySet().stream().map(entry -> Integer.parseInt(entry.getValue().toString())).max(Comparator.comparingInt(o -> o)).get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
