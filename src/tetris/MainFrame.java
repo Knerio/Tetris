@@ -4,16 +4,14 @@ import tetris.block.DisplayNextBlockFrame;
 import tetris.game.GameState;
 import tetris.game.PlayFrame;
 import tetris.label.TextLabel;
-import tetris.screen.LostScreen;
-import tetris.screen.PauseScreen;
-import tetris.screen.Screen;
-import tetris.screen.StartScreen;
+import tetris.screen.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.AbstractMap;
 import java.util.Comparator;
@@ -37,7 +35,7 @@ public class MainFrame extends JFrame {
 
     private PlayFrame playFrame;
 
-    public Screen pauseScreen, startScreen, lostScreen;
+    public Screen pauseScreen, startScreen, lostScreen, settingsScreen;
 
     public DisplayNextBlockFrame displayNextBlockFrame;
 
@@ -46,6 +44,8 @@ public class MainFrame extends JFrame {
     private final AtomicLong lastResizeTime = new AtomicLong(0);
 
     public String playerName;
+
+
 
 
     public MainFrame() throws HeadlessException {
@@ -71,6 +71,10 @@ public class MainFrame extends JFrame {
 
         lostScreen = new LostScreen();
         add(lostScreen);
+
+        settingsScreen = new SettingsScreen();
+        add(settingsScreen);
+
 
         playFrame = new PlayFrame();
         add(playFrame);
@@ -100,7 +104,7 @@ public class MainFrame extends JFrame {
                 recordLabel.setText("Rekord: " + record);
                 allTimeRecordLabel.setText("Allzeit-Rekord: " + allTimeRecord + " von " + allTimeRecordName);
 
-                if (!hasFocus() && PlayFrame.getInstance().gameState == GameState.PLAYING) {
+                if (!hasFocus() && (PlayFrame.getInstance().gameState == GameState.PLAYING || PlayFrame.getInstance().gameState == GameState.PAUSED)) {
                     requestFocus(); // Is needed when buttons are pressed and the main frame gets unfocused
                 }
 
@@ -160,6 +164,7 @@ public class MainFrame extends JFrame {
         pauseScreen.onResize();
         startScreen.onResize();
         lostScreen.onResize();
+        settingsScreen.onResize();
 
         ImageIcon image = new ImageIcon("res/background.png");
         Image rescaled = image.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_DEFAULT);

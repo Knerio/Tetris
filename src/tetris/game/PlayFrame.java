@@ -100,31 +100,6 @@ public class PlayFrame extends JPanel {
 
         audioManager.playAudio(ClipType.BACKGROUND, true);
 
-        MainFrame.getInstance().addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ESCAPE:
-                        if (gameState == GameState.PAUSED) {
-                            updateGameState(GameState.PLAYING);
-                        } else if (gameState == GameState.PLAYING) {
-                            updateGameState(GameState.PAUSED);
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
     }
 
     public void updateGameState(GameState gameState) {
@@ -315,7 +290,7 @@ public class PlayFrame extends JPanel {
     private void loseFunction() {
         audioManager.stopAudio(ClipType.BACKGROUND);
         audioManager.playAudio(ClipType.GAME_OVER).thenRun(() -> {
-            audioManager.playAudio(ClipType.BACKGROUND);
+            audioManager.playAudio(ClipType.BACKGROUND, true);
         });
         MainFrame.getInstance().lostScreen.fadeIn();
     }

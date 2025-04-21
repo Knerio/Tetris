@@ -38,16 +38,15 @@ public class StartScreen extends Screen {
         try {
             if (getWidth() == MainFrame.getInstance().getWidth()) return;
             if (getHeight() == MainFrame.getInstance().getHeight()) return;
-            System.out.println("asd");
             removeAll();
 
             setSize(MainFrame.getInstance().getSize());
 
 
-            ImageIcon image = new ImageIcon("res/start_background.png");
+            ImageIcon image = new ImageIcon("res/background.png");
             Image rescaled = image.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_DEFAULT);
             ImageIcon rescaledIcon = new ImageIcon(rescaled);
-            add(new JLabel(rescaledIcon));
+            add(new JLabel(rescaledIcon),  -1);
 
             TextLabel label = new TextLabel("TETRIS");
 
@@ -80,6 +79,25 @@ public class StartScreen extends Screen {
 
 
             add(nameInput, 1);
+
+            JButton settingsButton = new JButton("Steuerung");
+
+            settingsButton.setFont(new Font("Dialog", Font.PLAIN, MainFrame.getInstance().getScaleFactor() / 20));
+            settingsButton.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+            settingsButton.setForeground(Color.BLACK);
+            settingsButton.setSize(settingsButton.getPreferredSize());
+            settingsButton.setLocation(MainFrame.getInstance().getWidth() / 2 - settingsButton.getWidth() / 2,
+                    (int) (MainFrame.getInstance().getHeight() / 1.55 - settingsButton.getHeight() / 2));
+
+
+            add(settingsButton);
+            settingsButton.addActionListener(e -> {
+                fadeOut().thenRun(() -> {
+                    MainFrame.getInstance().settingsScreen.fadeIn();
+                    PlayFrame.getInstance().gameState = GameState.SETTING_START;
+                });
+            });
+
 
             startButton.addActionListener(e -> {
                 MainFrame.getInstance().playerName = nameInput.getText().replace(" ", "_");

@@ -22,6 +22,12 @@ public class ToPlaceBlock {
 
     private ShadowBlock shadow;
 
+    public static int leftKey = KeyEvent.VK_LEFT;
+    public static int rightKey = KeyEvent.VK_RIGHT;
+    public static int rotateKey = KeyEvent.VK_UP;
+    public static int downKey = KeyEvent.VK_DOWN;
+    public static int instantDownKey = KeyEvent.VK_SPACE;
+
 
     public List<Block> getBlocks() {
         return blocks;
@@ -46,28 +52,18 @@ public class ToPlaceBlock {
             public void keyPressed(KeyEvent e) {
                 if (PlayFrame.getInstance().gameState != GameState.PLAYING || !canBeMoved) return;
                 int blockSize = PlayFrame.getInstance().getRescaledBlockSize();
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_SPACE:
-                        placeNow();
-                        break;
-
-                    case KeyEvent.VK_UP:
-                    case KeyEvent.VK_W:
-                        rotate();
-                        break;
-                    case KeyEvent.VK_LEFT:
-                    case KeyEvent.VK_A:
-                        move(-blockSize);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                    case KeyEvent.VK_D:
-                        move(blockSize);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                    case KeyEvent.VK_S:
-                        moveDown();
-                        break;
+                if (e.getKeyCode() == leftKey) {
+                    move(-blockSize);
+                } else if (e.getKeyCode() == rightKey) {
+                    move(blockSize);
+                } else if (e.getKeyCode() == rotateKey) {
+                    rotate();
+                } else if (e.getKeyCode() == downKey) {
+                    moveDown();
+                } else if (e.getKeyCode() == instantDownKey) {
+                    placeNow();
                 }
+
                 shadow.update();
             }
 
